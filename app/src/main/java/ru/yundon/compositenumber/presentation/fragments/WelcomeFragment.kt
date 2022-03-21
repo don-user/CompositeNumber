@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import ru.yundon.compositenumber.Constants.EXCEPTION_MESSAGE_BINDING
+import ru.yundon.compositenumber.R
 import ru.yundon.compositenumber.databinding.FragmentWelcomeBinding
 
 class WelcomeFragment: Fragment() {
@@ -23,8 +24,25 @@ class WelcomeFragment: Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.buttonUnderstand.setOnClickListener {
+            launchChooseLevelFragment()
+        }
+
+    }
+
+    private fun launchChooseLevelFragment(){
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.main_container, ChooseLevelFragment.newInstance())
+            .addToBackStack(ChooseLevelFragment.NAME)
+            .commit()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
+
 }
