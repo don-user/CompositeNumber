@@ -13,8 +13,9 @@ import ru.yundon.compositenumber.Constants.EXCEPTION_MESSAGE_BINDING
 import ru.yundon.compositenumber.R
 import ru.yundon.compositenumber.databinding.FragmentGameBinding
 import ru.yundon.compositenumber.domain.entity.GameResult
-import ru.yundon.compositenumber.domain.entity.GameSettings
 import ru.yundon.compositenumber.domain.entity.Level
+import ru.yundon.compositenumber.presentation.viewmodel.GameViewModelFactory
+import ru.yundon.compositenumber.presentation.viewmodel.ViewModelGameFragment
 
 class GameFragment : Fragment() {
 
@@ -23,7 +24,7 @@ class GameFragment : Fragment() {
     private val viewModel by lazy {
         ViewModelProvider(
             this,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
+            GameViewModelFactory(level, requireActivity().application)
         ) [ViewModelGameFragment::class.java]
     }
 
@@ -60,7 +61,6 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.startGame(level)
         observeViewModel()
         setOnClickListenersOnOption()
     }
