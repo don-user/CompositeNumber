@@ -67,6 +67,7 @@ class ViewModelGameFragment(application: Application): AndroidViewModel(applicat
         getGameSettings(level)
         startTimer()
         generateQuestion()
+        updateProgress()
     }
 
     private fun updateProgress(){
@@ -85,6 +86,9 @@ class ViewModelGameFragment(application: Application): AndroidViewModel(applicat
     }
 
     private fun calculatePercentOfRightAnswer(): Int{
+        if (countOfQuestion == 0){
+            return 0
+        }
         return ((countOfRightAnswers / countOfQuestion.toDouble()) * 100).toInt()
     }
 
@@ -111,7 +115,7 @@ class ViewModelGameFragment(application: Application): AndroidViewModel(applicat
             MILLIS_IN_SECONDS
         ) {
             override fun onTick(p0: Long) {
-                _formattedTime.value = (p0 /1000).toString()
+                _formattedTime.value = formattedTimer(p0)
             }
             override fun onFinish() {
                 finishGame()
