@@ -1,31 +1,26 @@
 package ru.yundon.compositenumber.presentation.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import ru.yundon.compositenumber.Constants.EXCEPTION_MESSAGE_BINDING
 import ru.yundon.compositenumber.R
 import ru.yundon.compositenumber.databinding.FragmentGameFinishedBinding
 import ru.yundon.compositenumber.domain.entity.GameResult
-import java.lang.RuntimeException
 
 
 class GameFinishedFragment : Fragment() {
 
-    private lateinit var gameResult: GameResult
+    private val args by navArgs<GameFinishedFragmentArgs>()
+
 
     private var _binding: FragmentGameFinishedBinding? = null
     private val binding: FragmentGameFinishedBinding
         get() = _binding ?: throw RuntimeException(EXCEPTION_MESSAGE_BINDING)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        parseArgs()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +35,7 @@ class GameFinishedFragment : Fragment() {
 
 
         setupClickListener()
-        bindViews(gameResult)
+        bindViews(args.result)
     }
 
     override fun onDestroy() {
@@ -48,12 +43,6 @@ class GameFinishedFragment : Fragment() {
         _binding = null
     }
 
-    private fun parseArgs(){
-
-        requireArguments().getParcelable<GameResult>(KEY_GAME_RESULT)?.let {
-            gameResult = it
-        }
-    }
 
     private fun bindViews(gameResult: GameResult) = with(binding){
 
@@ -80,14 +69,10 @@ class GameFinishedFragment : Fragment() {
     }
 
     private fun retryGame(){
-
-        requireActivity().supportFragmentManager.popBackStack(
-            GameFragment.NAME_GAME_FRAGMENT,
-            FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
+        findNavController().popBackStack()
     }
 
-    private fun getPercentOfRightAnswer() = with(gameResult){
+    private fun getPercentOfRightAnswer() = with(args.result){
         if (countOfQuestions == 0) 0
         else ((countOfRightAnswers / countOfQuestions.toDouble()) * 100).toInt()
 
@@ -95,28 +80,8 @@ class GameFinishedFragment : Fragment() {
 
     private fun setupClickListener(){
 
-        val callback = object : OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                retryGame()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)  // viewLifecycleOwner для очищение коллбэка при закрытиии фрагмента
-
         binding.buttonRetry.setOnClickListener {
             retryGame()
-        }
-    }
-
-    companion object{
-
-        private const val KEY_GAME_RESULT = "game_result"
-
-        fun newInstance(result: GameResult): GameFinishedFragment{
-            return GameFinishedFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(KEY_GAME_RESULT, result)
-                }
-            }
         }
     }
 }
