@@ -1,8 +1,7 @@
 package ru.yundon.compositenumber.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import ru.yundon.compositenumber.R
+import androidx.appcompat.app.AppCompatActivity
 import ru.yundon.compositenumber.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
