@@ -17,7 +17,7 @@ import ru.yundon.compositenumber.domain.usecases.GetGameSettingsUseCase
 class ViewModelGameFragment(
     private val application: Application,
     private val level: Level
-): ViewModel() {
+) : ViewModel() {
 
     private val repository = GameRepositoryImpl
 
@@ -68,14 +68,14 @@ class ViewModelGameFragment(
         startGame()
     }
 
-    private fun startGame (){
+    private fun startGame() {
         getGameSettings()
         startTimer()
         generateQuestion()
         updateProgress()
     }
 
-    private fun updateProgress(){
+    private fun updateProgress() {
 
         val percent = calculatePercentOfRightAnswer()
         _percentOfRightAnswer.value = percent
@@ -90,14 +90,14 @@ class ViewModelGameFragment(
 
     }
 
-    private fun calculatePercentOfRightAnswer(): Int{
-        if (countOfQuestion == 0){
+    private fun calculatePercentOfRightAnswer(): Int {
+        if (countOfQuestion == 0) {
             return 0
         }
         return ((countOfRightAnswers / countOfQuestion.toDouble()) * 100).toInt()
     }
 
-    fun chooseAnswer(number: Int){
+    fun chooseAnswer(number: Int) {
         val rightAnswer = question.value?.rightAnswer
         if (number == rightAnswer) {
             countOfRightAnswers++
@@ -108,12 +108,12 @@ class ViewModelGameFragment(
         generateQuestion()
     }
 
-    private fun getGameSettings(){
+    private fun getGameSettings() {
         this.gameSetting = getGameSettingsUseCase(level) // из-за invoke вызываем как метод
         _minPercent.value = gameSetting.minPercentOfRightAnswers
     }
 
-    private fun startTimer(){
+    private fun startTimer() {
         timer = object : CountDownTimer(
             gameSetting.gameTimeSeconds * MILLIS_IN_SECONDS,
             MILLIS_IN_SECONDS
@@ -121,6 +121,7 @@ class ViewModelGameFragment(
             override fun onTick(p0: Long) {
                 _formattedTime.value = formattedTimer(p0)
             }
+
             override fun onFinish() {
                 finishGame()
             }
@@ -128,7 +129,7 @@ class ViewModelGameFragment(
         timer?.start()
     }
 
-    private fun generateQuestion(){
+    private fun generateQuestion() {
         _question.value = generateQuestionUseCase(gameSetting.maxSumValue)
     }
 
@@ -142,7 +143,7 @@ class ViewModelGameFragment(
 
     }
 
-    private fun finishGame(){
+    private fun finishGame() {
 
         _gameResult.value = GameResult(
             winner =
@@ -159,7 +160,7 @@ class ViewModelGameFragment(
         timer?.cancel()
     }
 
-    companion object{
+    companion object {
         const val MILLIS_IN_SECONDS = 1000L
         const val SECOND_IN_MINUTES = 60
     }
