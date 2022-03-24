@@ -10,11 +10,11 @@ import ru.yundon.compositenumber.Constants.EXCEPTION_MESSAGE_BINDING
 import ru.yundon.compositenumber.R
 import ru.yundon.compositenumber.databinding.FragmentWelcomeBinding
 
-class WelcomeFragment: Fragment() {
+class WelcomeFragment : Fragment() {
 
     private var _binding: FragmentWelcomeBinding? = null
     private val binding: FragmentWelcomeBinding
-        get() = _binding ?: throw RuntimeException (EXCEPTION_MESSAGE_BINDING)
+        get() = _binding ?: throw RuntimeException(EXCEPTION_MESSAGE_BINDING)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,7 +34,7 @@ class WelcomeFragment: Fragment() {
 
     }
 
-    private fun launchChooseLevelFragment(){
+    private fun launchChooseLevelFragment() {
         findNavController().navigate(R.id.action_welcomeFragment_to_chooseLevelFragment)
 
     }

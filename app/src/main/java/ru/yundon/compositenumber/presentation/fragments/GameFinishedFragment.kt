@@ -40,10 +40,11 @@ class GameFinishedFragment : Fragment() {
     }
 
 
-    private fun retryGame(){
+    private fun retryGame() {
         findNavController().popBackStack()
     }
-    private fun setupClickListener(){
+
+    private fun setupClickListener() {
 
         binding.buttonRetry.setOnClickListener {
             retryGame()

@@ -25,19 +25,7 @@ class GameFragment : Fragment() {
         ViewModelProvider(
             this,
             GameViewModelFactory(args.level, requireActivity().application)
-        ) [ViewModelGameFragment::class.java]
-    }
-
-    private val tvOptions by lazy {
-
-        mutableListOf<TextView>().apply {
-           add(binding.tViewOption1)
-           add(binding.tViewOption2)
-           add(binding.tViewOption3)
-           add(binding.tViewOption4)
-           add(binding.tViewOption5)
-           add(binding.tViewOption6)
-        }
+        )[ViewModelGameFragment::class.java]
     }
 
     private var _binding: FragmentGameBinding? = null
@@ -55,8 +43,9 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
         observeViewModel()
-        setOnClickListenersOnOption()
     }
 
     override fun onDestroy() {
@@ -64,66 +53,14 @@ class GameFragment : Fragment() {
         _binding = null
     }
 
-    private fun observeViewModel() = with(binding){
+    private fun observeViewModel() = with(binding) {
 
-        viewModel.apply {
-            formattedTime.observe(viewLifecycleOwner){
-                tViewTimer.text = it
-            }
-            question.observe(viewLifecycleOwner){
-                tViewSum.text = it.sum.toString()
-                tViewLeftNumber.text = it.visibleNumber.toString()
-
-                for (i in 0 until tvOptions.size){
-                    tvOptions[i].text = it.options[i].toString()
-                }
-            }
-
-            percentOfRightAnswer.observe(viewLifecycleOwner){
-                progressBar.setProgress(it,true)  // если апи менее 24 удалить true
-            }
-            //устанавливаем цвет теста где показывает сколько верных ответов
-            enoughCountOfRightAnswers.observe(viewLifecycleOwner){
-
-                tViewAnswerProgress.setTextColor(getColorByState(it))
-            }
-            //устанавливаем цвет прогресс бару
-            enoughPercentOfRightAnswers.observe(viewLifecycleOwner){
-                val color = getColorByState(it)
-                progressBar.progressTintList = ColorStateList.valueOf(color)
-            }
-            // присвоение в прогресс баре второй прогресс
-            minPercent.observe(viewLifecycleOwner){
-                progressBar.secondaryProgress = it
-            }
-            progressAnswers.observe(viewLifecycleOwner){
-                tViewAnswerProgress.text = it
-            }
-
-            gameResult.observe(viewLifecycleOwner){
-                launchGameFinishedFragment(it)
-            }
+        viewModel.gameResult.observe(viewLifecycleOwner) {
+            launchGameFinishedFragment(it)
         }
     }
 
-    private fun getColorByState(goodState: Boolean): Int{
-        val colorResId =
-            if(goodState) android.R.color.holo_green_light
-            else android.R.color.holo_red_light
-
-        return ContextCompat.getColor(requireContext(), colorResId)
-    }
-
-    private fun setOnClickListenersOnOption(){
-       for (item in tvOptions){
-           item.setOnClickListener {
-               viewModel.chooseAnswer(item.text.toString().toInt())
-           }
-       }
-
-    }
-
-    private fun launchGameFinishedFragment(result: GameResult){
+    private fun launchGameFinishedFragment(result: GameResult) {
 
         findNavController().navigate(
             GameFragmentDirections.actionGameFragmentToGameFinishedFragment(result)
