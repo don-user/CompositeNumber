@@ -1,4 +1,4 @@
-package ru.yundon.compositenumber.presentation
+package ru.yundon.compositenumber.presentation.binding
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -49,7 +49,7 @@ private fun getColorByState(context: Context, goodState: Boolean): Int {
 }
 
 //Слушатель клика на варианты ответов,
-// (Int) -> Unit) это лямюда функция которая принимает Int и ничего не возвращает
+// clickListener это функциональный интерфес который принимает Int и ничего не возвращает
 @BindingAdapter("onOptionClickListener")
 fun bindOnOptionClickListener(textView: TextView, clickListener: OnOptionClickListener) {
     textView.setOnClickListener {
