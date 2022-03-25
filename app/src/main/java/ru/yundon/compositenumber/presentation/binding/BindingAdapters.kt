@@ -1,4 +1,4 @@
-package ru.yundon.compositenumber.presentation
+package ru.yundon.compositenumber.presentation.binding
 
 import android.widget.ImageView
 import android.widget.TextView
